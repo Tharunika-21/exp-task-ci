@@ -1,0 +1,61 @@
+frontend:
+  dpname: myapp
+  image:
+    repository: tharunika21/exp-front
+    tag: v3.0 
+    pullPolicy: Always
+  replicaCount: 1
+
+mongo:
+  name : mongo
+  image:
+    repository: mongo
+    tag: latest
+  replicaCount: 1
+
+server:
+  dpname: server
+  image:
+    repository: tharunika21/exp-back
+    tag: v1.0
+    pullPolicy: Always
+  replicaCount: 1
+
+myappService:
+  ports:
+    port: 3000
+    targetPort: 3000
+  type: LoadBalancer  
+
+mongoService:
+  ports:
+    port: 27017
+    targetPort: 27017
+  type: LoadBalancer 
+
+serverService:
+  ports:
+    port: 4000
+    targetPort: 4000
+  type: LoadBalancer  
+
+serverHPA:
+  name: exp-autoscaler
+  scaleTargetRefKind: Deployment
+  scaleTargetRefName: server
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 50
+
+persistentVolume:
+  name: exp-pv
+  capacity: 250Mi
+  volumePath: "/temp/data"
+  storageClassName: standard
+  reclaimPolicy: Retain
+
+persistentVolumeClaim:
+  name: exp-pvc
+  storageRequest: 250Mi
+  accessMode: ReadWriteOnce
+  storageClassName: standard

@@ -1,0 +1,14 @@
+apiVersion: v1 
+kind: Pod
+metadata:
+  name: exp-pod
+spec:
+  containers:
+  - name: frontendpod-cont
+    image: tharunika21/exp-front:v1.0
+    ports:
+    - containerPort: 3000
+  - name: backendpod-cont
+    image: tharunika21/exp-back:v1.0
+    ports:
+      - containerPort: 4000

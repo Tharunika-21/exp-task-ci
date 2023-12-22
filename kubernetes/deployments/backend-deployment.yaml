@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: myapp
+  template:
+    metadata:
+      labels:
+        app: myapp
+    spec:
+      containers:
+        - name: backenddep-cont
+          image: tharunika21/exp-back:v1.0
+          env:
+            - name: database_url
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-config
+                  key: DB_URL
+          ports:
+          - containerPort: 4000

@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.server.dpname }}
+spec:
+  selector:
+    app: server
+  ports:
+    - port: {{ .Values.serverService.ports.port }}
+      targetPort: {{ .Values.serverService.ports.targetPort }}
+  type: {{ .Values.serverService.type }}

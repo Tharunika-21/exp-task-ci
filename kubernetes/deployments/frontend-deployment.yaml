@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: myapp
+  template:
+    metadata:
+      labels:
+        app: myapp
+    spec:
+      volumes:
+        - name: secretvol
+          secret:
+            secretName: react_url
+      containers:
+        - name: frontendep-cont
+          image: tharunika21/exp-front:v3.0
+          env:
+            - name: BACKEND_URL 
+              valueFrom:
+                configMapKeyRef:
+                  name: frontend-config
+                  key: BACKEND_URL
+          ports:
+          - containerPort: 3000
+          volumeMounts:
+            - mountPath: /app/.env
+              name: secretvol

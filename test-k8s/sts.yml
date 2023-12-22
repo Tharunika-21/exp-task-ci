@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: exp-sts
+spec:
+  selector:
+    matchLabels:
+      app: myapp
+  serviceName: mongo
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: myapp
+    spec:
+      containers:
+      - name: sts-cont
+        image: mongo:latest
+        ports:
+        - containerPort: 27017
+        volumeMounts:
+        - name: exp-pvc
+          mountPath: /temp/data
+  volumeClaimTemplates:
+  - metadata:
+      name: exp-pvc
+    spec:
+      accessModes:  
+        - "ReadWriteOnce" 
+      resources:
+        requests:
+          storage: 1Gi

@@ -1,0 +1,6 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backend-config
+data:
+  DB_URL: "mongodb+srv://tharunika:tharunika@cluster0.g9dpsrf.mongodb.net/"

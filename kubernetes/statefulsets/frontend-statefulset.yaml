@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: frontend-expstatefulset
+spec:
+  selector:
+    matchLabels:
+      app: myapp
+  serviceName: frontend-service
+  template:
+    metadata:
+      labels:
+        app: myapp
+    spec:
+      containers:
+        - name: frontendrepliset-cont
+          image: tharunika21/exp-front:v3.0
+          ports:
+            - containerPort: 3000

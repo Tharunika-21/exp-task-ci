@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: backend-expstatefulset
+spec:
+  selector:
+    matchLabels:
+      app: myapp
+  serviceName: backend-service
+  template:
+    metadata:
+      labels:
+        app: myapp
+    spec:
+      containers:
+        - name: backendrepliset-cont
+          image: tharunika21/exp-back:v1.0
+          ports:
+            - containerPort: 4000

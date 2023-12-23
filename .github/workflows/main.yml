@@ -48,4 +48,4 @@ jobs:
       run: aws eks update-kubeconfig --name tharunidemo --region eu-north-1 
     - name: Deploy nodejs helm chart to EKS
       run: |
-       helm install nwrel ./expensechart
+       helm install nwrel ./expensechart --namespace argocd

@@ -1,8 +1,8 @@
 frontend:
   dpname: myapp
   image:
-    repository: tharunika21/exp-front
-    tag: v3.0 
+    repository: tharunika21/tggfinfrontendimage
+    tag: latest
     pullPolicy: Always
   replicaCount: 1
 
@@ -16,28 +16,28 @@ mongo:
 server:
   dpname: server
   image:
-    repository: tharunika21/exp-back
-    tag: v1.0
+    repository: tharunika21/tggfinbackendimage
+    tag: latest
     pullPolicy: Always
   replicaCount: 1
 
 myappService:
   ports:
-    port: 3000
+    port: 80
     targetPort: 3000
-  type: LoadBalancer  
+  type: NodePort  
 
 mongoService:
   ports:
     port: 27017
     targetPort: 27017
-  type: LoadBalancer 
+  type: LoadBalancer  
 
 serverService:
   ports:
-    port: 4000
+    port: 80
     targetPort: 4000
-  type: LoadBalancer  
+  type: NodePort  
 
 serverHPA:
   name: exp-autoscaler

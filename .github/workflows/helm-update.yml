@@ -25,7 +25,10 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-south-1
-
+      - name: Create directories if not exist
+        run: |
+          mkdir -p ./expensechart
+          mkdir -p ./packaged-charts
       - name: Fetch Helm Chart from Another Repository
         run: |
           git clone https://github.com/Tharunika-21/tharuni-helm.git ./expensechart
@@ -66,6 +69,8 @@ jobs:
           docker build -t ${{ secrets.AWS_REGISTRY_URL }}:latest ./backend
           docker push ${{ secrets.AWS_REGISTRY_URL }}:latest
         id: build_backend
+
+      
 
       - name: Update Helm chart values
         run: |

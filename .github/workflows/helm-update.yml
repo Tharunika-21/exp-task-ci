@@ -27,17 +27,6 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-south-1
 
-      - name: Install Docker
-        run: |
-          sudo apt-get update
-          sudo apt-get install docker.io -y
-
-      - name: Install Helm
-        run: |
-          curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
-          chmod +x get_helm.sh
-          ./get_helm.sh
-
       - name: Fetch Helm Chart from Another Repository
         run: |
           git clone https://github.com/Tharunika-21/tharuni-helm.git ./expensechart

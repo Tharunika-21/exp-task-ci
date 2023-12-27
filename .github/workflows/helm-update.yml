@@ -35,24 +35,36 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
  
-      - name: Build, tag, and push frontend image to Amazon ECR
-        env:
-          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          REPOSITORY: expimg
-          IMAGE_TAG: latest
+      # - name: Build, tag, and push frontend image to Amazon ECR
+      #   env:
+      #     REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+      #     REPOSITORY: expimg
+      #     IMAGE_TAG: latest
+      #   run: |
+      #     docker build -t $REGISTRY/$REPOSITORY:latest ./frontend
+      #     docker push $REGISTRY/$REPOSITORY:latest
+      #   id: build_frontend
+ 
+      # - name: Build, tag, and push backend image to Amazon ECR
+      #   env:
+      #     REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+      #     SERVER_REPOSITORY: expimg
+      #     SERVER_IMAGE_TAG: latest
+      #   run: |
+      #     docker build -t $REGISTRY/$SERVER_REPOSITORY:latest ./backend
+      #     docker push $REGISTRY/$SERVER_REPOSITORY:latest
+      #   id: build_backend
+
+      - name: Build and Push Docker Image
         run: |
-          docker build -t $REGISTRY/$REPOSITORY:latest ./frontend
-          docker push $REGISTRY/$REPOSITORY:latest
+          docker build -t ${{ secrets.AWS_REGISTRY_URL }}:latest ./frontend
+          docker push ${{ secrets.AWS_REGISTRY_URL }}:latest
         id: build_frontend
  
-      - name: Build, tag, and push backend image to Amazon ECR
-        env:
-          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          SERVER_REPOSITORY: expimg
-          SERVER_IMAGE_TAG: latest
+      - name: Build and Push Docker Image
         run: |
-          docker build -t $REGISTRY/$SERVER_REPOSITORY:latest ./backend
-          docker push $REGISTRY/$SERVER_REPOSITORY:latest
+          docker build -t ${{ secrets.AWS_REGISTRY_URL }}:latest ./backend
+          docker push ${{ secrets.AWS_REGISTRY_URL }}:latest
         id: build_backend
 
       - name: Update Helm chart values

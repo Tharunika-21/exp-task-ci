@@ -63,7 +63,7 @@ jobs:
           sed -i "s|repository: .*|repository: ${{ steps.build_backend.outputs.backend_image }}|" ./expensechart/values.yml
 
       - name: Update kube config
-        run: aws eks update-kubeconfig --name tharunidemo --region eu-north-1 
+        run: aws eks update-kubeconfig --name tharunika-cluster --region ap-south-1
         
       - name: Deploy Helm chart to EKS
         run: |

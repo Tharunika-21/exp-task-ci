@@ -5,7 +5,7 @@ import {toast} from 'react-hot-toast'
 export const getUserExpenses = async (userId)=>{
     try {
         
-        const response = await axiosClient.post('/expenses/allExpenses',{
+        const response = await axiosClient.post('/api/expenses/allExpenses',{
             userId
         });
         // records.sort((a, b) => {
@@ -24,7 +24,7 @@ export const getUserExpenses = async (userId)=>{
 export const createExpense = async (expInfo)=>{
     try {
         console.log(expInfo)
-        const response = await axiosClient.post('/expenses/addExpense',
+        const response = await axiosClient.post('/api/expenses/addExpense',
             expInfo
         )
         console.log(response.data)
@@ -46,7 +46,7 @@ export const deleteExpense = async (data)=>{
     try {
         // console.log(data)
         const {expenseId,userId} = data ;
-        const response = await axiosClient.post('/expenses/deleteExpense',{
+        const response = await axiosClient.post('/api/expenses/deleteExpense',{
             expenseId ,
             userId 
         });
@@ -66,7 +66,7 @@ export const deleteExpense = async (data)=>{
 
 export const sendEmail = async (sender , data)=>{
         try {
-            const response = await axiosClient.post('/expenses/sendEmail',{
+            const response = await axiosClient.post('/api/expenses/sendEmail',{
                 recipient : sender , 
                 body : data
             })

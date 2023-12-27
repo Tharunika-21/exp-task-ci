@@ -26,7 +26,7 @@ function Signup() {
     e.preventDefault();
     try {
       ref.current.staticStart();
-      await axiosClient.post('/auth/signup',{
+      await axiosClient.post('/api/auth/signup',{
         username,
        email,
        password

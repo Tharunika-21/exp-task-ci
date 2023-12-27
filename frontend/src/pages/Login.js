@@ -26,7 +26,7 @@ function Login() {
       e.preventDefault();
       try {
         ref.current.staticStart();
-        const response = await axiosClient.post('/auth/login',{
+        const response = await axiosClient.post('/api/auth/login',{
          email,
          password
         });

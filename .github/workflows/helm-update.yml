@@ -1,0 +1,86 @@
+name: Build, push Docker images, and deploy Helm chart
+on:
+  push:
+    branches: 
+      - main
+    paths-ignore:
+      - '**/*.yml'
+
+  pull_request:
+    branches: 
+      - main
+    paths-ignore:
+      - '**/*.yml'
+ 
+ 
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Setup AWS CLI
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-south-1
+
+      - name: Install Docker
+        run: |
+          sudo apt-get update
+          sudo apt-get install docker.io -y
+
+      - name: Install Helm
+        run: |
+          curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
+          chmod +x get_helm.sh
+          ./get_helm.sh
+
+      - name: Fetch Helm Chart from Another Repository
+        run: |
+          git clone https://github.com/Tharunika-21/tharuni-helm.git ./expensechart
+          helm package ./expensechart -d ./packaged-charts
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+ 
+      - name: Build, tag, and push frontend image to Amazon ECR
+        env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          REPOSITORY: expimg
+          IMAGE_TAG: latest
+        run: |
+          docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG ./frontend
+          docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+          echo "::set-output name=frontend_image::$REGISTRY/$REPOSITORY:$IMAGE_TAG"
+        id: build_frontend
+ 
+      - name: Build, tag, and push backend image to Amazon ECR
+        env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          SERVER_REPOSITORY: expimg
+          SERVER_IMAGE_TAG: latest
+        run: |
+          docker build -t $REGISTRY/$SERVER_REPOSITORY:$SERVER_IMAGE_TAG ./backend
+          docker push $REGISTRY/$SERVER_REPOSITORY:$SERVER_IMAGE_TAG
+          echo "::set-output name=backend_image::$REGISTRY/$SERVER_REPOSITORY:$SERVER_IMAGE_TAG"
+        id: build_backend
+
+      - name: Update Helm chart values
+        run: |
+          sed -i "s|repository: .*|repository: ${{ steps.build_frontend.outputs.frontend_image }}|" ./expensechart/values.yml
+          sed -i "s|repository: .*|repository: ${{ steps.build_backend.outputs.backend_image }}|" ./expensechart/values.yml
+
+      - name: Update kube config
+        run: aws eks update-kubeconfig --name tharunidemo --region eu-north-1 
+        
+      - name: Deploy Helm chart to EKS
+        run: |
+          helm install myexpapp . -n tharunika
+
+
+
+

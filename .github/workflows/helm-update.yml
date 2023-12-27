@@ -2,13 +2,9 @@ name: Build, push Docker images, and deploy Helm chart
 on:
   push:
     branches: ["main"]
-    paths-ignore:
-      - '**/*.yml'
 
   pull_request:
     branches: ["main"]
-    paths-ignore:
-      - '**/*.yml'
  
  
 jobs:

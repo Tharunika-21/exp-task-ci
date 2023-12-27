@@ -41,9 +41,8 @@ jobs:
           REPOSITORY: expimg
           IMAGE_TAG: latest
         run: |
-          docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG ./frontend
-          docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
-          echo "::set-output name=frontend_image::$REGISTRY/$REPOSITORY:$IMAGE_TAG"
+          docker build -t $REGISTRY/$REPOSITORY:latest ./frontend
+          docker push $REGISTRY/$REPOSITORY:latest
         id: build_frontend
  
       - name: Build, tag, and push backend image to Amazon ECR
@@ -52,9 +51,8 @@ jobs:
           SERVER_REPOSITORY: expimg
           SERVER_IMAGE_TAG: latest
         run: |
-          docker build -t $REGISTRY/$SERVER_REPOSITORY:$SERVER_IMAGE_TAG ./backend
-          docker push $REGISTRY/$SERVER_REPOSITORY:$SERVER_IMAGE_TAG
-          echo "::set-output name=backend_image::$REGISTRY/$SERVER_REPOSITORY:$SERVER_IMAGE_TAG"
+          docker build -t $REGISTRY/$SERVER_REPOSITORY:latest ./backend
+          docker push $REGISTRY/$SERVER_REPOSITORY:latest
         id: build_backend
 
       - name: Update Helm chart values

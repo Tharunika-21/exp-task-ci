@@ -53,14 +53,10 @@ jobs:
         with:
             github-token: ${{ secrets.MY_GITHUB_TOKEN }}
             script: |
-              const { data: workflow } = await github.actions.listRepoWorkflows({
-                owner: 'Tharunika-21',
-                repo: 'tharuni-helm'
-              });
-              const workflowID = workflow.workflows.find(w => w.name === 'update-helm-chart').id;
-              await github.actions.createWorkflowDispatch({
+              const result = await github.rest.actions.createWorkflowDispatch({
                 owner: 'Tharunika-21',
                 repo: 'tharuni-helm',
-                workflow_id: workflowID,
-                ref: 'main'
+                workflow_id: 'update-helm-chart.yml',
+                ref: 'main',
               });
+              console.log(result);  

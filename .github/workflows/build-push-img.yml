@@ -1,0 +1,75 @@
+name: Build and Push Docker Images
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install kubectl
+        uses: azure/setup-kubectl@v2.0
+        with:
+          version: 'v1.27.0' 
+        id: install
+ 
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-south-1
+ 
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build and Push Frontend Docker Image
+        id: build-and-push-frontend
+        run: |
+            FRONTEND_IMAGE_TAG=$(date +%s)  # Generate a timestamp-based tag
+            docker build -t ${{ secrets.AWS_REGISTRY_URL }}/frontend:${FRONTEND_IMAGE_TAG} ./frontend
+            docker push ${{ secrets.AWS_REGISTRY_URL }}/frontend:${FRONTEND_IMAGE_TAG}
+            echo "::set-output name=image::${{ secrets.AWS_REGISTRY_URL }}/frontend:${FRONTEND_IMAGE_TAG}"
+
+      - name: Build and Push Backend Docker Image
+        id: build-and-push-backend
+        run: |
+            BACKEND_IMAGE_TAG=$(date +%s)  # Generate a timestamp-based tag
+            docker build -t ${{ secrets.AWS_REGISTRY_URL }}/backend:${BACKEND_IMAGE_TAG} ./backend
+            docker push ${{ secrets.AWS_REGISTRY_URL }}/backend:${BACKEND_IMAGE_TAG}
+            echo "::set-output name=image::${{ secrets.AWS_REGISTRY_URL }}/backend:${BACKEND_IMAGE_TAG}"
+
+      - name: Update Helm Chart Values
+        run: |
+            FRONTEND_IMAGE=${{ steps.build-and-push-frontend.outputs.image }}
+            BACKEND_IMAGE=${{ steps.build-and-push-backend.outputs.image }}
+
+            sed -i "s|repository: your-frontend-image|repository: $FRONTEND_IMAGE|" path/to/values.yaml
+            sed -i "s|repository: your-backend-image|repository: $BACKEND_IMAGE|" path/to/values.yaml
+
+            # Commit and push changes to your tharuni-helm repo
+            # Use git commands to commit and push the changes
+
+      - name: Trigger Update Helm Chart Workflow
+        uses: actions/github-script@v5
+        with:
+            github-token: ${{ secrets.MY_GITHUB_TOKEN }}
+            script: |
+              const { data: workflow } = await github.actions.listRepoWorkflows({
+                owner: 'Tharunika-21',
+                repo: 'tharuni-helm'
+              });
+              const workflowID = workflow.workflows.find(w => w.name === 'update-helm-chart').id;
+              await github.actions.createWorkflowDispatch({
+                owner: 'Tharunika-21',
+                repo: 'tharuni-helm',
+                workflow_id: workflowID,
+                ref: 'main'
+              });

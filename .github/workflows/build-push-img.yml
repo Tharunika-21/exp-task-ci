@@ -45,14 +45,6 @@ jobs:
             docker push ${{ secrets.AWS_REGISTRY_URL }}:latest
             echo "::set-output name=image::${{ secrets.AWS_REGISTRY_URL }}/backend:latest"
 
-      - name: Update Helm Chart Values
-        run: |
-            FRONTEND_IMAGE=${{ steps.build-and-push-frontend.outputs.image }}
-            BACKEND_IMAGE=${{ steps.build-and-push-backend.outputs.image }}
-
-            sed -i "s|repository: your-frontend-image|repository: $FRONTEND_IMAGE|" path/to/values.yaml
-            sed -i "s|repository: your-backend-image|repository: $BACKEND_IMAGE|" path/to/values.yaml
-
             # Commit and push changes to your tharuni-helm repo
             # Use git commands to commit and push the changes
 

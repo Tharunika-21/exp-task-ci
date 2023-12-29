@@ -67,7 +67,7 @@ function Login() {
             setPassword(e.target.value);
           }} className='w-96 h-12 pl-6 rounded-2xl outline-none transition-all focus:outline-2 focus:outline-white focus:outline-offset-4 ' ></input>
           <button onClick={submitForm} className='w-96 h-12 justify-center text-lg rounded-2xl   bg-yellow-600 text-center flex  items-center font-bold  ' >Submit</button>
-          <p className='text-white' >New User ? Go To <a href='/signup'>SignUp</a></p>
+          <p className='text-white' >Are u a New User ? Go To <a href='/signup'>SignUp</a></p>
         </div>
       </div>
     </div>

@@ -30,44 +30,22 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      # - name: Build and Push Frontend Docker Image
-      #   id: build-and-push-frontend
-      #   run: |
-      #       docker build -t ${{ secrets.AWS_REGISTRY_URL }}:latest ./frontend
-      #       docker push ${{ secrets.AWS_REGISTRY_URL }}:latest
-      #       echo "::set-output name=image::${{ secrets.AWS_REGISTRY_URL }}/frontend:latest"
-
-
-      # - name: Build and Push Backend Docker Image
-      #   id: build-and-push-backend
-      #   run: |
-      #       docker build -t ${{ secrets.AWS_BACK_REGISTRY_URL }}:latest ./backend
-      #       docker push ${{ secrets.AWS_BACK_REGISTRY_URL }}:latest
-      #       echo "::set-output name=image::${{ secrets.AWS_BACK_REGISTRY_URL }}/backend:latest"
-
-      - name: Get commit ID
-        id: commit-id
-        run: echo "::set-output name=commit_id::$(git rev-parse --short HEAD)"
-
-
       - name: Build and Push Frontend Docker Image
         id: build-and-push-frontend
         run: |
-            COMMIT_ID=$(echo ${{ steps.commit-id.outputs.commit_id }})
-            docker build -t ${{ secrets.AWS_REGISTRY_URL }}:latest-$COMMIT_ID ./frontend
-            docker push ${{ secrets.AWS_REGISTRY_URL }}/frontend:latest-$COMMIT_ID
-            echo "::set-output name=image::${{ secrets.AWS_REGISTRY_URL }}/frontend:latest-$COMMIT_ID"
+            docker build -t ${{ secrets.AWS_REGISTRY_URL }}:latest ./frontend
+            docker push ${{ secrets.AWS_REGISTRY_URL }}:latest
+            echo "::set-output name=image::${{ secrets.AWS_REGISTRY_URL }}/frontend:latest"
+
 
       - name: Build and Push Backend Docker Image
         id: build-and-push-backend
         run: |
-            COMMIT_ID=$(echo ${{ steps.commit-id.outputs.commit_id }})
             docker build -t ${{ secrets.AWS_BACK_REGISTRY_URL }}:latest ./backend
-            docker tag ${{ secrets.AWS_BACK_REGISTRY_URL }}:latest ${{ secrets.AWS_REGISTRY_URL }}/backend:latest-$COMMIT_ID
             docker push ${{ secrets.AWS_BACK_REGISTRY_URL }}:latest
-            docker push ${{ secrets.AWS_BACK_REGISTRY_URL }}/backend:latest-$COMMIT_ID
-            echo "::set-output name=image::${{ secrets.AWS_BACK_REGISTRY_URL }}/backend:latest-$COMMIT_ID"    
+            echo "::set-output name=image::${{ secrets.AWS_BACK_REGISTRY_URL }}/backend:latest"
 
+    
       - name: Trigger Update Helm Chart Workflow
         uses: actions/github-script@v5
         with:

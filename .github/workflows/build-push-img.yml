@@ -45,9 +45,9 @@ jobs:
         id: build-and-push-frontend
         run: |
           COMMIT_ID=$(echo ${{ steps.commit-id.outputs.commit_id }})
-          docker build -t tharunika21/frontend:${COMMIT_ID} ./frontend
-          docker push tharunika21/frontend:${COMMIT_ID}
-          echo "::set-output name=image::tharunika21/frontend:${COMMIT_ID}"
+          docker build -t ${{ secrets.AWS_BACK_REGISTRY_URL }}:${COMMIT_ID} ./frontend
+          docker push ${{ secrets.AWS_BACK_REGISTRY_URL }}:${COMMIT_ID}
+          echo "::set-output name=image::${{ secrets.AWS_BACK_REGISTRY_URL }}:${COMMIT_ID}"
 
             
       - name: Build and Push Backend Docker Image

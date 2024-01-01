@@ -60,12 +60,18 @@ jobs:
       - name: Trigger Update Helm Chart Workflow
         uses: actions/github-script@v5
         with:
-            github-token: ${{ secrets.MY_GITHUB_TOKEN }}
-            script: |
-              const result = await github.rest.actions.createWorkflowDispatch({
-                owner: 'Tharunika-21',
-                repo: 'tharuni-helm',
-                workflow_id: 'update-helm-chart.yml',
-                ref: 'main',
-              });
-              console.log(result);  
+          github-token: ${{ secrets.MY_GITHUB_TOKEN }}
+          script: |
+            const result = await github.rest.actions.createWorkflowDispatch({
+              owner: 'Tharunika-21',
+              repo: 'tharuni-helm',
+              workflow_id: 'update-helm-chart.yml',
+              ref: 'main',
+              inputs: {
+                image_repo_frontend: '${{ secrets.AWS_REGISTRY_URL }}:${{ steps.commit-id.outputs.commit_id }}',
+                image_tag_frontend: '${{ steps.commit-id.outputs.commit_id }}',
+                image_repo_backend: '${{ secrets.AWS_BACK_REGISTRY_URL }}:${{ steps.commit-id.outputs.commit_id }}',
+                image_tag_backend: '${{ steps.commit-id.outputs.commit_id }}'
+              }
+            });
+            console.log(result); 

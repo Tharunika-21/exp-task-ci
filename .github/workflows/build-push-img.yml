@@ -51,6 +51,7 @@ jobs:
       - name: Build and Push Backend Docker Image
         id: build-and-push-backend
         run: |
+            COMMIT_ID=$(echo ${{ steps.commit-id.outputs.commit_id }})
             docker build -t ${{ secrets.AWS_BACK_REGISTRY_URL }}:${COMMIT_ID} ./backend
             docker push ${{ secrets.AWS_BACK_REGISTRY_URL }}:${COMMIT_ID}
             echo "::set-output name=image::${{ secrets.AWS_BACK_REGISTRY_URL }}/backend:${COMMIT_ID}"

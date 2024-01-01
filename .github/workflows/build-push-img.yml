@@ -45,17 +45,17 @@ jobs:
         id: build-and-push-frontend
         run: |
           COMMIT_ID=$(echo ${{ steps.commit-id.outputs.commit_id }})
-          docker build -t ${{ secrets.AWS_BACK_REGISTRY_URL }}:${COMMIT_ID} ./frontend
-          docker push ${{ secrets.AWS_BACK_REGISTRY_URL }}:${COMMIT_ID}
-          echo "::set-output name=image::${{ secrets.AWS_BACK_REGISTRY_URL }}:${COMMIT_ID}"
+          docker build -t ${{ secrets.AWS_REGISTRY_URL }}:${COMMIT_ID} ./frontend
+          docker push ${{ secrets.AWS_REGISTRY_URL }}:${COMMIT_ID}
+          echo "::set-output name=image::${{ secrets.AWS_REGISTRY_URL }}:${COMMIT_ID}"
 
             
       - name: Build and Push Backend Docker Image
         id: build-and-push-backend
         run: |
-            docker build -t ${{ secrets.AWS_BACK_REGISTRY_URL }}:latest ./backend
-            docker push ${{ secrets.AWS_BACK_REGISTRY_URL }}:latest
-            echo "::set-output name=image::${{ secrets.AWS_BACK_REGISTRY_URL }}/backend:latest"
+            docker build -t ${{ secrets.AWS_BACK_REGISTRY_URL }}:${COMMIT_ID} ./backend
+            docker push ${{ secrets.AWS_BACK_REGISTRY_URL }}:${COMMIT_ID}
+            echo "::set-output name=image::${{ secrets.AWS_BACK_REGISTRY_URL }}/backend:${COMMIT_ID}"
 
     
       - name: Trigger Update Helm Chart Workflow

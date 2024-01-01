@@ -44,10 +44,12 @@ jobs:
       - name: Build and Push Frontend Docker Image
         id: build-and-push-frontend
         run: |
-            COMMIT_ID=$(echo ${{ steps.commit-id.outputs.commit_id }})
-            docker build -t ${{ secrets.AWS_REGISTRY_URL }}:${COMMIT_ID} ./frontend
-            docker push ${{ secrets.AWS_REGISTRY_URL }}/frontend:${COMMIT_ID}
-            echo "::set-output name=image::${{ secrets.AWS_REGISTRY_URL }}/frontend:${COMMIT_ID}"
+          COMMIT_ID=$(echo ${{ steps.commit-id.outputs.commit_id }})
+          docker build -t my-registry.io/my-repo/frontend:latest-${COMMIT_ID} ./frontend
+          docker push my-registry.io/my-repo/frontend:latest-${COMMIT_ID}
+          echo "::set-output name=image::my-registry.io/my-repo/frontend:latest-${COMMIT_ID}"
+
+            
       - name: Build and Push Backend Docker Image
         id: build-and-push-backend
         run: |

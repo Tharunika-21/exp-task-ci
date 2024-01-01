@@ -30,14 +30,24 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
+      # - name: Build and Push Frontend Docker Image
+      #   id: build-and-push-frontend
+      #   run: |
+      #       docker build -t ${{ secrets.AWS_REGISTRY_URL }}:latest ./frontend
+      #       docker push ${{ secrets.AWS_REGISTRY_URL }}:latest
+      #       echo "::set-output name=image::${{ secrets.AWS_REGISTRY_URL }}/frontend:latest"
+
+      - name: Get commit ID
+        id: commit-id
+        run: echo "::set-output name=commit_id::$(git rev-parse --short HEAD)"
+
       - name: Build and Push Frontend Docker Image
         id: build-and-push-frontend
         run: |
-            docker build -t ${{ secrets.AWS_REGISTRY_URL }}:latest ./frontend
-            docker push ${{ secrets.AWS_REGISTRY_URL }}:latest
-            echo "::set-output name=image::${{ secrets.AWS_REGISTRY_URL }}/frontend:latest"
-
-
+            COMMIT_ID=$(echo ${{ steps.commit-id.outputs.commit_id }})
+            docker build -t ${{ secrets.AWS_REGISTRY_URL }}:latest-${COMMIT_ID} ./frontend
+            docker push ${{ secrets.AWS_REGISTRY_URL }}/frontend:latest-${COMMIT_ID}
+            echo "::set-output name=image::${{ secrets.AWS_REGISTRY_URL }}/frontend:latest-${COMMIT_ID}"
       - name: Build and Push Backend Docker Image
         id: build-and-push-backend
         run: |

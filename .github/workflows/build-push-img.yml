@@ -45,9 +45,9 @@ jobs:
         id: build-and-push-frontend
         run: |
           COMMIT_ID=$(echo ${{ steps.commit-id.outputs.commit_id }})
-          docker build -t my-registry.io/my-repo/frontend:latest-${COMMIT_ID} ./frontend
-          docker push my-registry.io/my-repo/frontend:latest-${COMMIT_ID}
-          echo "::set-output name=image::my-registry.io/my-repo/frontend:latest-${COMMIT_ID}"
+          docker build -t tharunika21/frontend:${COMMIT_ID} ./frontend
+          docker push tharunika21/frontend:${COMMIT_ID}
+          echo "::set-output name=image::tharunika21/frontend:${COMMIT_ID}"
 
             
       - name: Build and Push Backend Docker Image

@@ -68,9 +68,9 @@ jobs:
               workflow_id: 'update-helm-chart.yml',
               ref: 'main',
               inputs: {
-                image_repo_frontend: '${{ secrets.AWS_REGISTRY_URL }}:${{ steps.commit-id.outputs.commit_id }}',
+                image_repo_frontend: '${{ secrets.AWS_REGISTRY_URL }}',
                 image_tag_frontend: '${{ steps.commit-id.outputs.commit_id }}',
-                image_repo_backend: '${{ secrets.AWS_BACK_REGISTRY_URL }}:${{ steps.commit-id.outputs.commit_id }}',
+                image_repo_backend: '${{ secrets.AWS_BACK_REGISTRY_URL }}',
                 image_tag_backend: '${{ steps.commit-id.outputs.commit_id }}'
               }
             });

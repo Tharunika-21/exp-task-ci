@@ -13,9 +13,10 @@ const app = express();
 //   allowedHeaders: '*', // Allow all headers
 // }));
 
-app.use(cors({origin:'http://k8s-tharunik-myapping-d0bc499bd1-1677237449.ap-south-1.elb.amazonaws.com/', credentials:true}));
+// app.use(cors({origin:'http://k8s-tharunik-myapping-d0bc499bd1-1677237449.ap-south-1.elb.amazonaws.com/', credentials:true}));
+// app.use(express.json());
+app.use(cors({origin:['http://tharunika.dofreshmind.com','http://k8s-tharunik-myapping-d0bc499bd1-1677237449.ap-south-1.elb.amazonaws.com/'], credentials:true}));
 app.use(express.json());
-
 // app.use((req, res, next) => {
 //   res.setHeader('Access-Control-Allow-Origin', '*'); // Set the allowed origin here
 //   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');

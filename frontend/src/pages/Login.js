@@ -50,7 +50,7 @@ function Login() {
 
   return (
     <div className='bg-slate-800 w-screen h-screen flex flex-row '>
-      <LoadingBar color='orange' ref={ref}  ></LoadingBar>
+      <LoadingBar color='green' ref={ref}  ></LoadingBar>
       <div className='left  w-2/5  h-screen '>
         <h1 className='text-white font-thin  w-3/4 pl-10 text-7xl leading-tight relative top-1/4 left-10 whitespace-pre-wrap ' ><span className='font-medium text-yellow-500' >Expense</span><br></br>Tracker App!!</h1>
       </div>

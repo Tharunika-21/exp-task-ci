@@ -32,7 +32,7 @@ function Signup() {
        password
       });
       // console.log(response.data.message);
-      toast.success("Registerd Successfully....")
+      toast.success(".........Registerd Successfully....")
       ref.current.complete();
       navigate("/login");
 
